@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import "../../cssfiles/roles.css"
-export function Roles(){
-const [formData, setFormData] = useState({
+import "../../cssfiles/roles.css";
+
+export function Roles() {
+  const [formData, setFormData] = useState({
     role: "InboundStaff",
     username: "",
     password: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +46,7 @@ const [formData, setFormData] = useState({
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/roles', {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/roles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -64,28 +66,26 @@ const [formData, setFormData] = useState({
       setIsLoading(false);
     }
   };   
-    return(
-        <>
-        <div className="selectroles">
-            
-            <form onSubmit={handleSubmit} className="formroles">
-                <label htmlFor="Roles" id="roleshead">Select Role you want to create</label>
-                <select name="role" id="selectbtn" value={formData.role} onChange={handleInputChange}>
-                    <option value="InboundStaff">Inbound Staff</option>
-                    <option value="OutboundStaff">Outbound Staff</option>
-                    <option value="Manager">Manager</option>
-                    <option value="DataOperator">DataOperator</option>
-                </select>
-                <label htmlFor="username">User Name</label>
-                <input type="text" id="username" name="username" value={formData.username} onChange={handleInputChange}/>
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password"  name="password" value={formData.password} onChange={handleInputChange} />
 
-                <button id="submitbtn" disabled={isLoading}>
-                {isLoading ? "Adding..." : "Add Role"}
-                </button>
-            </form>
-        </div>
-        </>
-    )
+  return(
+    <div className="selectroles">
+      <form onSubmit={handleSubmit} className="formroles">
+        <label htmlFor="Roles" id="roleshead">Select Role you want to create</label>
+        <select name="role" id="selectbtn" value={formData.role} onChange={handleInputChange}>
+          <option value="InboundStaff">Inbound Staff</option>
+          <option value="OutboundStaff">Outbound Staff</option>
+          <option value="Manager">Manager</option>
+          <option value="DataOperator">DataOperator</option>
+        </select>
+        <label htmlFor="username">User Name</label>
+        <input type="text" id="username" name="username" value={formData.username} onChange={handleInputChange}/>
+        <label htmlFor="password">Password</label>
+        <input type="password" id="password"  name="password" value={formData.password} onChange={handleInputChange} />
+
+        <button id="submitbtn" disabled={isLoading}>
+          {isLoading ? "Adding..." : "Add Role"}
+        </button>
+      </form>
+    </div>
+  )
 }

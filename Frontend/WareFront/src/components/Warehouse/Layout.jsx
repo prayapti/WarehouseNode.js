@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 
 const LocationMap = () => {
   const [locations, setLocations] = useState([]);
-const token =localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  
+  // Updated: Use Vite environment variable
+  const API_BASE_URL = import.meta.env.VITE_BASE_URL || "https://warehousenode-js-4.onrender.com";
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5050/api/inventory/products/getdetails",{
-            method:"GET",
+        const res = await fetch(`${API_BASE_URL}/inventory/products/getdetails`, {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },

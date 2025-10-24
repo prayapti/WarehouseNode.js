@@ -17,8 +17,11 @@ export function WarehouseDetails() {
     WarehouseCompany_Type: "Shipping",
   });
 
-  const token =localStorage.getItem("token")
+  const token = localStorage.getItem("token")
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Updated: Use Vite environment variable
+  const API_BASE_URL = import.meta.env.VITE_BASE_URL || "https://warehousenode-js-4.onrender.com";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,12 +44,13 @@ export function WarehouseDetails() {
       });
 
       console.log(token)
-      const response = await fetch("http://localhost:5050/api/warehouse/add", {
-        method:"POST",
-         headers: { "Content-Type": "application/json",
+      const response = await fetch(`${API_BASE_URL}/warehouse/add`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          },
-      body: JSON.stringify(formData), 
+        },
+        body: JSON.stringify(formData), 
       });
 
       const result = await response.json();

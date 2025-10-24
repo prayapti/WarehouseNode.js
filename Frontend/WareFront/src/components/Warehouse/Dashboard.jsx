@@ -13,29 +13,24 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 Chart.register(ArcElement, Tooltip, Legend, Title, PieController, ChartDataLabels);
 
-
-
-
 export function Dashboard ()  {
   const [summary, setSummary] = useState({});
   const [status, setStatus] = useState({});
   const [orders, setOrders] = useState([]);
   const [loadingInvoice, setLoadingInvoice] = useState({});
 
-  // console.log(localStorage.getItem(token))
-  // Fetch data from backend
   useEffect(() => {
-    fetch("http://localhost:5050/order-management/summary")
+    fetch(`${import.meta.env.VITE_BASE_URL}/order-management/summary`)
       .then(res => res.json())
       .then(data => setSummary(data))
       .catch(err => console.error("Error fetching summary:", err));
 
-    fetch("http://localhost:5050/order-management/status")
+    fetch(`${import.meta.env.VITE_BASE_URL}/order-management/status`)
       .then(res => res.json())
       .then(data => setStatus(data))
       .catch(err => console.error("Error fetching status:", err));
 
-        fetch("http://localhost:5050/order-management/recent-orders")
+    fetch(`${import.meta.env.VITE_BASE_URL}/order-management/recent-orders`)
       .then(res => res.json())
       .then(data => {
         console.log("Orders API Response:", data); 
@@ -61,7 +56,7 @@ export function Dashboard ()  {
       return;
     }
 
-    const response = await fetch(`http://localhost:5050/order-management/orders/generate-invoice/${orderId}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/order-management/orders/generate-invoice/${orderId}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -87,8 +82,6 @@ export function Dashboard ()  {
     setLoadingInvoice(prev => ({ ...prev, [orderId]: false }));
   }
 };
-
-
 
   // Render pie chart dynamically
   useEffect(() => {
@@ -219,7 +212,7 @@ export function Dashboard ()  {
                   <td>
                     <button 
                       className="button-33"
-                      onClick={() => handleDownloadInvoice(order.orderId || order._id, order.pdfPath)}
+                      onClick={() => handleDownloadInvoice(order.orderId || order._id)}
                       disabled={loadingInvoice[order.orderId || order._id]}
                     >
                       {loadingInvoice[order.orderId || order._id] 
@@ -248,5 +241,3 @@ export function Dashboard ()  {
     </div>
   );
 };
-
-

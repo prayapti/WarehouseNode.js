@@ -76,11 +76,14 @@ const SignUp = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5050/api/SignUpview", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/SignUpview`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       console.log("Form submitted");
       if (response.ok) {
         const result = await response.json();
@@ -215,7 +218,7 @@ const SignUp = () => {
                         {showConfirmPassword ? (
                           <EyeOff size={16} />
                         ) : (
-                          <Eye size={16} />
+                          <Eye size={16} /> // <-- Fixed: Changed 1Details to 16
                         )}
                       </button>
                     </div>

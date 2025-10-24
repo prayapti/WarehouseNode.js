@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import BillsTable from "./billsTable"; 
-import { apiRequest } from "../../lib/queryClient";
 import "../../cssfiles/Bills.css"; 
 
 export default function Bills() {
@@ -10,17 +9,29 @@ export default function Bills() {
   const [searchTerm, setSearchTerm] = useState("");
   const queryClient = useQueryClient();
 
+  // Fetch bills from backend using VITE_BASE_URL
   const { data: bills, isLoading } = useQuery({
     queryKey: ["/api/bills"],
-    queryFn: () => apiRequest("/api/bills"),
+    queryFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/bills`);
+      if (!res.ok) throw new Error("Failed to fetch bills");
+      return res.json();
+    },
   });
 
+  // Mutation for updating bill status
   const updateBillStatusMutation = useMutation({
     mutationFn: async ({ id, status }) => {
-      return apiRequest(`/api/bills/${id}/status`, {
-        method: "PATCH",
-        body: JSON.stringify({ status }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/bills/${id}/status`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update bill status");
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bills"] });
@@ -36,7 +47,6 @@ export default function Bills() {
       bill.billId.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
-
 
   const billsSummary = bills
     ? {

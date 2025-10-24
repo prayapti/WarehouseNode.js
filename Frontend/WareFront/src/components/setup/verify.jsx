@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../cssfiles/verify.css";
 import "../../cssfiles/OTPSingleInput.css";
-const verify = () => {
+
+const Verify = () => { // Renamed to 'Verify' to follow React component naming conventions
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -30,34 +31,33 @@ const verify = () => {
       otp,
       email: localStorage.getItem("email"),
     };
-    console.log(payload)
-    try{
-    const response = await fetch("http://localhost:5050/api/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const result = await response.json();
-    
-    if (response.ok) {
-     
-      console.log(result);
-      // localStorage.setItem("token")
-      navigate("/setWarehouse");
-    }
-    else{
-      alert("You have entered a wrong OTP")
-    }
-  }
-  catch(err){
-    console.log("Error:", err);
-      alert("Something went wrong. Please try again.");
-  }
-  finally{
-    setIsLoading(false)
-  }
+    console.log(payload);
 
-    
+    try {
+      // CHANGE 1: Verification URL
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/verify`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log(result);
+        // localStorage.setItem("token")
+        navigate("/setWarehouse");
+      } else {
+        alert("You have entered a wrong OTP");
+      }
+    } catch (err) {
+      console.log("Error:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleResendOTP = async () => {
@@ -69,11 +69,17 @@ const verify = () => {
         alert("Email not found. Please go back to sign up.");
         return;
       }
-      const response = await fetch("http://localhost:5050/api/resend-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      
+      // CHANGE 2: Resend OTP URL
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/resend-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+      
       if (response.ok) {
         alert("A new OTP has been sent to your email.");
         setOtp("");
@@ -85,7 +91,7 @@ const verify = () => {
     } catch (err) {
       console.log("Resend error:", err);
       alert("Something went wrong. Please try again.");
-    }finally {
+    } finally {
       setIsResending(false);
     }
   };
@@ -158,4 +164,5 @@ const verify = () => {
     </div>
   );
 };
-export default verify;
+
+export default Verify;

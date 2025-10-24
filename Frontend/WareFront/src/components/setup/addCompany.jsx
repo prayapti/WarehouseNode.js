@@ -7,8 +7,6 @@ export const AddCompany = () => {
     CompanyAddress: "",
     CompanyPhone: "",
     CompanyEmail: "",
-    
-
   });
 
   const [companyDocument, setCompanyDocument] = useState(null);
@@ -37,7 +35,7 @@ export const AddCompany = () => {
       data.append("GSTIN", formData.GSTIN);
       data.append("CompanyDocuments", companyDocument);
 
-      const response = await fetch("http://localhost:5050/api/CompanyView", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/CompanyView`, {
         method: "POST",
         body: data,
       });
@@ -109,7 +107,7 @@ export const AddCompany = () => {
         <input
           type="text"
           name="GSTIN"
-          value={formData.warehouse}
+          value={formData.GSTIN}
           onChange={handleChange}
           required
         />
@@ -120,7 +118,6 @@ export const AddCompany = () => {
       <style>
         {`
           .company-form {
-            
             max-width: 500px;
             margin: 40px auto;
             padding: 20px;
@@ -159,16 +156,16 @@ export const AddCompany = () => {
           .company-form button:hover {
             background: #df4019ff;
           }
-            @media (max-width: 768px) {
+          @media (max-width: 768px) {
             .company-form{
                 margin-top:40vh;
             }
-            }
-            @media (max-width: 1300px) {
+          }
+          @media (max-width: 1300px) {
             .company-form{
                 margin-top:30vh;
             }
-            }
+          }
         `}
       </style>
     </>

@@ -8,10 +8,10 @@ export default function AnnualReports() {
   const { data: reports, isLoading } = useQuery({
     queryKey: ["/api/annual-reports"],
     queryFn: async () => {
-     const response = await fetch("/api/annual-reports");
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/annual-reports`);
       if (!response.ok) throw new Error("Failed to fetch annual reports");
       return response.json();
-  },
+    },
   });
 
   const summaryStats = reports
@@ -32,31 +32,31 @@ export default function AnnualReports() {
           ) / reports.length,
       }
     : null;
-  
+
   const exportTableToCSV = () => {
-  if (!reports) return;
+    if (!reports) return;
 
-  const headers = ["Month", "Revenue", "Orders", "Items Shipped", "Growth"];
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+    const headers = ["Month", "Revenue", "Orders", "Items Shipped", "Growth"];
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
 
-  const rows = reports.map(report => [
-    monthNames[report.month - 1],
-    report.revenue,
-    report.orders,
-    report.itemsShipped,
-    report.growthRate + "%"
-  ]);
+    const rows = reports.map(report => [
+      monthNames[report.month - 1],
+      report.revenue,
+      report.orders,
+      report.itemsShipped,
+      report.growthRate + "%"
+    ]);
 
-  const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "annual_reports.csv";
-  link.click();
-};
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "annual_reports.csv";
+    link.click();
+  };
 
   return (
     <div className="annual-reports-container" data-testid="annual-reports-view">
@@ -132,24 +132,11 @@ export default function AnnualReports() {
               ) : (
                 reports?.map((report) => {
                   const monthNames = [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
+                    "January","February","March","April","May","June",
+                    "July","August","September","October","November","December",
                   ];
                   return (
-                    <tr
-                      key={`${report.year}-${report.month}`}
-                      data-testid={`metrics-row-${report.month}`}
-                    >
+                    <tr key={`${report.year}-${report.month}`} data-testid={`metrics-row-${report.month}`}>
                       <td>{monthNames[report.month - 1]}</td>
                       <td>${parseFloat(report.revenue).toLocaleString()}</td>
                       <td>{report.orders.toLocaleString()}</td>

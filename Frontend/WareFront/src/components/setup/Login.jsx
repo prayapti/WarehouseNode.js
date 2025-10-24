@@ -13,13 +13,13 @@ const Login = () => {
   const payload ={
     password:password,
     email:email,
-
   }
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     
-try{
-    const response = await fetch("http://localhost:5050/api/Login", {
+    try{
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/Login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -27,17 +27,13 @@ try{
 
       const result = await response.json();
       if(response.ok){
-
-        
-       localStorage.setItem("token",result.token)
-       navigate("/dashboard")
+        localStorage.setItem("token",result.token)
         if(result.userType === 'warehouse'){
-        navigate('/dashboard');  
-    } else if(result.userType === 'client'){
-        navigate('/WarehouseDetailsForm'); 
-    }
-}
-      else{
+          navigate('/dashboard');  
+        } else if(result.userType === 'client'){
+          navigate('/WarehouseDetailsForm'); 
+        }
+      } else{
         console.log("message")
       }
     }catch(err){
@@ -45,9 +41,6 @@ try{
     }
     setLoading(true);
     console.log('Login attempt:', { email, password, remember });
-
-    
-    
   };
 
   return (
@@ -109,7 +102,9 @@ try{
                 />
                 <label htmlFor="remember">Remember me</label>
               </div>
-              <a href="#" className={styles.forgotPassword}>Forgot password?</a>
+              <Link to="/forgot-password" className={styles.forgotPassword}>
+                Forgot password?
+              </Link>
             </div>
 
             <button type="submit" className={styles.loginButton}>
@@ -118,7 +113,7 @@ try{
             </button>
 
             <p className={styles.signupText}>
-              Don't have an account? <a href="SignUp.html">Sign up</a>
+              Don't have an account? <Link to="/signup">Sign up</Link>
             </p>
           </form>
         </div>
