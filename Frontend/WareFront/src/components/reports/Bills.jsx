@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import BillsTable from "./billsTable"; 
-import "../../cssfiles/Bills.css"; 
+import "../../cssfiles/bills.css"; 
 
 export default function Bills() {
   const [statusFilter, setStatusFilter] = useState("all");
